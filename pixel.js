@@ -47,6 +47,12 @@ if ( fs.existsSync( CONTEXT_PATH ) ) {
  * @return {Promise<string>}
  */
 async function getLatestReleaseBranch() {
+	// FIXME this has to be different for Codex. But we also can't set this to e.g.
+	// origin/tags/v1.3.1 even when group='codex', because then it'll try to check out
+	// that tag in all the other repos. Maybe we could leave this unmodified, and then
+	// remap origin/wmf/1.42.0-wmf.16 to origin/tags/v1.3.1 in MwCheckout#checkoutBranch?
+	// (Although that would always put us a version behind.)
+
 	// Get the latest branch version that starts with a digit.
 	const { stdout } = await exec( 'git ls-remote -h --sort="-version:refname" https://gerrit.wikimedia.org/r/mediawiki/core --patterns "refs/heads/wmf/[0-9]*" | head -1' );
 	return `origin/${stdout.split( 'refs/heads/' )[ 1 ].trim()}`;
@@ -145,7 +151,7 @@ const GROUP_CONFIG = {
 		config: 'configCampaignEvents.js'
 	},
 	codex: {
-		priority: 2,
+		priority: 1,
 		config: 'configCodex.js'
 	},
 	wikilambda: {
