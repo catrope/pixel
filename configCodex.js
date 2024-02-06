@@ -122,24 +122,40 @@ const components = [
 	}
 ];
 
-const scenarios = components.map( ( componentData ) => {
-	const { sandboxSection, ...otherData } = componentData;
-	/** @type {string[]} */
-	let selectors = [];
-	/** @type {string[]} */
-	let removeSelectors = [];
-	if ( sandboxSection ) {
-		selectors = [ `#cdx-${sandboxSection}` ];
-		removeSelectors = [ `main section:not(#cdx-${sandboxSection})` ];
-	}
-	return {
-		selectors,
-		removeSelectors,
-		...otherData,
-		url: `${process.env.PIXEL_MW_SERVER}/w/codex/packages/codex/dist/sandbox/index.html`,
+const scenarios = [
+	...components.map( ( componentData ) => {
+		const { sandboxSection, ...otherData } = componentData;
+		/** @type {string[]} */
+		let selectors = [];
+		/** @type {string[]} */
+		let removeSelectors = [];
+		if ( sandboxSection ) {
+			selectors = [ `#cdx-${sandboxSection}` ];
+			removeSelectors = [ `main section:not(#cdx-${sandboxSection})` ];
+		}
+		return {
+			selectors,
+			removeSelectors,
+			...otherData,
+			url: `${process.env.PIXEL_MW_SERVER}/w/codex/packages/codex/dist/sandbox/index.html`,
+			misMatchThreshold: 1
+		};
+	} ),
+	{
+		label: 'All buttons',
+		selectors: [ 'viewport' ],
+		removeSelectors: [],
+		url: `${process.env.PIXEL_MW_SERVER}/w/codex/packages/codex/dist/sandbox/demos/buttons.html`,
 		misMatchThreshold: 1
-	};
-} );
+	},
+	{
+		label: 'All icons',
+		selectors: [ 'viewport' ],
+		removeSelectors: [],
+		url: `${process.env.PIXEL_MW_SERVER}/w/codex/packages/codex/dist/sandbox/demos/icons.html`,
+		misMatchThreshold: 1
+	}
+];
 
 module.exports = {
 	id: 'MediaWiki',
